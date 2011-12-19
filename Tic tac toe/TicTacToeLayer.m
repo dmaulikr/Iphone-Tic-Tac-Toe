@@ -32,7 +32,7 @@
     
     // Loop through the array of markers and set all markers to false
     int i;
-    for(i = 0; i <= 8; i++){
+    for(i = 0; i <= 10; i++){
         [_markers insertObject:@"0" atIndex:i]; 
     }
     
@@ -80,50 +80,128 @@
 
 
 - (void) addMarker:(CGPoint)location {
+    CCSprite *marker;
     
     NSLog(@"TouchedX:%f TouchedY:%f",location.x,location.y);   
-    CCSprite *marker = [CCSprite spriteWithFile:@"x.png"];
+    if(curPlayer == @"1") {
+        marker = [CCSprite spriteWithFile:@"x.png"];
+        curPlayer = @"2";
+    } else {
+        marker = [CCSprite spriteWithFile:@"o.png"];
+        curPlayer = @"1";
+    }
+    
+    int i;
+    for(i = 1; i <= 9; i++){
+        NSLog(@"Object at %d: %d",i,[[_markers objectAtIndex:i]intValue]); 
+    }
     
     // Calculate what field to place marker in
-    /*
-     2011-12-19 21:58:09.103 Tic tac toe[5169:c503] TouchedX:17.000000 TouchedY:305.000000
-     2011-12-19 21:58:15.234 Tic tac toe[5169:c503] TouchedX:303.000000 TouchedY:306.000000
-     2011-12-19 21:58:22.038 Tic tac toe[5169:c503] TouchedX:16.000000 TouchedY:16.000000
-     2011-12-19 21:58:24.536 Tic tac toe[5169:c503] TouchedX:303.000000 TouchedY:13.000000
-    */
-    
+
     // Ignore clicks outside of playing field
     if(location.x < 17 || location.x > 303) return;
     if(location.y < 13 || location.y > 306) return;
     
-    /*
-     2011-12-19 22:01:38.026 Tic tac toe[5245:c503] TouchedX:15.000000 TouchedY:304.000000
-     2011-12-19 22:01:42.908 Tic tac toe[5245:c503] TouchedX:109.000000 TouchedY:304.000000
-     2011-12-19 22:01:46.196 Tic tac toe[5245:c503] TouchedX:108.000000 TouchedY:211.000000
-     2011-12-19 22:01:48.727 Tic tac toe[5245:c503] TouchedX:18.000000 TouchedY:213.000000
-    */
     // Top row 
     if(location.y < 306 && location.y > 213){
+        
         if(location.x > 15 && location.x < 108){
-            if([[_markers objectAtIndex:0] intValue] == 0){
-                [_markers insertObject:curPlayer atIndex:0];
+            if([_markers objectAtIndex:1] == @"0"){
+                [_markers replaceObjectAtIndex:1 withObject:curPlayer];
                 marker.position = ccp(62,255);
-                NSLog(@"Placed marker at position 0");
+                [self addChild:marker];
+                NSLog(@"Adding marker at position 1"); 
+                return;
+            }
+        }
+
+        if(location.x > 110 && location.x < 203){
+             if([_markers objectAtIndex:2] == @"0"){
+                [_markers replaceObjectAtIndex:2 withObject:curPlayer];
+                marker.position = ccp(160,255);
+                [self addChild:marker];
+                  NSLog(@"Adding marker at position 2"); 
+                 return;
+            }
+        }  
+        if(location.x > 205 && location.x < 298){
+             if([_markers objectAtIndex:3] == @"0"){
+                [_markers replaceObjectAtIndex:3 withObject:curPlayer];
+                marker.position = ccp(258,255);
+                [self addChild:marker];
+                  NSLog(@"Adding marker at position 3"); 
+                 return;
+            }
+        } 
+    }
+    // Middle row
+    else if(location.y < 204 && location.y > 113){
+        
+        if(location.x > 15 && location.x < 108){
+             if([_markers objectAtIndex:4] == @"0"){
+                [_markers replaceObjectAtIndex:4 withObject:curPlayer];
+                marker.position = ccp(62,158);
+                [self addChild:marker];
+                  NSLog(@"Adding marker at position 4"); 
+                 return;
             }
         }
         if(location.x > 110 && location.x < 203){
-            if([[_markers objectAtIndex:1] intValue] == 0){
-                [_markers insertObject:curPlayer atIndex:1];
-                marker.position = ccp(160,255);
+             if([_markers objectAtIndex:5] == @"0"){
+                [_markers replaceObjectAtIndex:5 withObject:curPlayer];
+                marker.position = ccp(160,158);
+                [self addChild:marker];
+                  NSLog(@"Adding marker at position 5"); 
+                 return;
             }
-        }        
+        }  
+        if(location.x > 205 && location.x < 298){
+             if([_markers objectAtIndex:6] == @"0"){
+                [_markers replaceObjectAtIndex:6 withObject:curPlayer];
+                marker.position = ccp(258,158);
+                [self addChild:marker];
+                  NSLog(@"Adding marker at position 6"); 
+                 return;
+            }
+        } 
+    }
+    // Bottom row
+    else if(location.y < 108 && location.y > 16){
+        
+        if(location.x > 15 && location.x < 108){
+             if([_markers objectAtIndex:7] == @"0"){
+                [_markers replaceObjectAtIndex:7 withObject:curPlayer];
+                marker.position = ccp(62,60);
+                [self addChild:marker];
+                  NSLog(@"Adding marker at position 7"); 
+                 return;
+            }
+        }
+        if(location.x > 110 && location.x < 203){
+             if([_markers objectAtIndex:8] == @"0"){
+                [_markers replaceObjectAtIndex:8 withObject:curPlayer];
+                marker.position = ccp(160,60);
+                [self addChild:marker];
+                  NSLog(@"Adding marker at position 8"); 
+                 return;
+            }
+        }  
+        if(location.x > 205 && location.x < 298){
+             if([_markers objectAtIndex:9] == @"0"){
+                [_markers replaceObjectAtIndex:9 withObject:curPlayer];
+                marker.position = ccp(258,60);
+                [self addChild:marker];
+                  NSLog(@"Adding marker at position 9"); 
+                 return;
+            }
+        } 
     }
     else {
         return;
     }
 
     
-    [self addChild:marker];
+
     
 }
 
