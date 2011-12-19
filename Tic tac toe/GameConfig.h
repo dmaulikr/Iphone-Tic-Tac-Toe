@@ -16,8 +16,8 @@
 //		CCDirector
 //
 #define kGameAutorotationNone 0
-#define kGameAutorotationCCDirector 1
-#define kGameAutorotationUIViewController 2
+#define kGameAutorotationCCDirector 0
+#define kGameAutorotationUIViewController 0
 
 //
 // Define here the type of autorotation that you want for your game
