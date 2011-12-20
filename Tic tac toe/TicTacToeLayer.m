@@ -37,7 +37,24 @@
         [_markers insertObject:@"0" atIndex:i]; 
     }
     
+    // remove sprites if any
+    int arrayCount = [_markersprites count];
+    for (i = 0; i < arrayCount; i++) {    
+        // Do your thing with the object.
+        [self removeChild:[_markersprites objectAtIndex:i] cleanup:YES];
+    }
     curPlayer = @"1";
+    
+}
+
+-(CCLabelTTF *) displayMessage :(NSString *)mess position:(CGPoint)position size:(int)size {
+
+
+	CCLabelTTF *myLabel = [CCLabelTTF labelWithString:mess fontName:@"Marker Felt" fontSize:size];
+    myLabel.position =  position;
+
+    [self addChild: myLabel];  
+    return myLabel;
     
 }
 
@@ -53,7 +70,8 @@
         
         // allocate memory
         _markers = [[NSMutableArray alloc] init];
-        
+        _markersprites = [[NSMutableArray alloc] init];
+                        
         // ask director the the window size
 		CGSize size = [[CCDirector sharedDirector] winSize];
         
@@ -62,20 +80,51 @@
         gamefield.position = ccp(size.width / 2,size.height / 2);
         
         [self addChild:gamefield];
-        
-		// create and initialize a Label
-		CCLabelTTF *label = [CCLabelTTF labelWithString:@"Tic Tac Toe" fontName:@"Marker Felt" fontSize:64];
-	
-		// position the label on the center of the screen
-		label.position =  ccp( size.width /2 , size.height - 64 );
-		
-		// add the label as a child to this Layer
-		[self addChild: label];
-        
+
+        headermsg = [self displayMessage:@"Tic Tac Toe" position:CGPointMake(size.width /2 , size.height - 64)size:64];
+        startmsg = [self displayMessage:@"Touch to start playing!" position:CGPointMake(size.width /2 , size.height - 120)size:32];
+        turnmsg = [self displayMessage:@"" position:CGPointMake(size.width /2 , size.height - 120)size:32];
         // reset markers
         [self resetMarkers];
 	}
 	return self;
+}
+
+-(int) checkWinner {
+    
+    int i;
+    for(i = 0; i <= 9; i++){
+        // Check for horizontal rows
+        if([_markers objectAtIndex:1] == @"1" && [_markers objectAtIndex:2] == @"1" && [_markers objectAtIndex:3] == @"1") return 1;
+        if([_markers objectAtIndex:4] == @"1" && [_markers objectAtIndex:5] == @"1" && [_markers objectAtIndex:6] == @"1") return 1;
+        if([_markers objectAtIndex:6] == @"1" && [_markers objectAtIndex:8] == @"1" && [_markers objectAtIndex:9] == @"1") return 1;
+        
+        if([_markers objectAtIndex:1] == @"2" && [_markers objectAtIndex:2] == @"2" && [_markers objectAtIndex:3] == @"2") return 2;
+        if([_markers objectAtIndex:4] == @"2" && [_markers objectAtIndex:5] == @"2" && [_markers objectAtIndex:6] == @"2") return 2;
+        if([_markers objectAtIndex:6] == @"2" && [_markers objectAtIndex:8] == @"2" && [_markers objectAtIndex:9] == @"2") return 2;
+        
+        // Check for vertical rows
+        if([_markers objectAtIndex:1] == @"1" && [_markers objectAtIndex:4] == @"1" && [_markers objectAtIndex:6] == @"1") return 1;
+        if([_markers objectAtIndex:2] == @"1" && [_markers objectAtIndex:5] == @"1" && [_markers objectAtIndex:8] == @"1") return 1;
+        if([_markers objectAtIndex:3] == @"1" && [_markers objectAtIndex:6] == @"1" && [_markers objectAtIndex:9] == @"1") return 1;
+
+        if([_markers objectAtIndex:1] == @"2" && [_markers objectAtIndex:4] == @"2" && [_markers objectAtIndex:6] == @"2") return 2;
+        if([_markers objectAtIndex:2] == @"2" && [_markers objectAtIndex:5] == @"2" && [_markers objectAtIndex:8] == @"2") return 2;
+        if([_markers objectAtIndex:3] == @"2" && [_markers objectAtIndex:6] == @"2" && [_markers objectAtIndex:9] == @"2") return 2;
+        
+        // Check for diagonal rows
+        if([_markers objectAtIndex:1] == @"1" && [_markers objectAtIndex:5] == @"1" && [_markers objectAtIndex:9] == @"1") return 1;
+        if([_markers objectAtIndex:3] == @"1" && [_markers objectAtIndex:5] == @"1" && [_markers objectAtIndex:7] == @"1") return 1;    
+
+        if([_markers objectAtIndex:1] == @"2" && [_markers objectAtIndex:5] == @"2" && [_markers objectAtIndex:9] == @"2") return 1;
+        if([_markers objectAtIndex:3] == @"2" && [_markers objectAtIndex:5] == @"2" && [_markers objectAtIndex:7] == @"2") return 1;    
+        
+        // If all markers is place no one won
+        if([_markers objectAtIndex:1] != @"0" && [_markers objectAtIndex:2] != @"0" && [_markers objectAtIndex:3] != @"0"
+        && [_markers objectAtIndex:4] != @"0" && [_markers objectAtIndex:5] != @"0" && [_markers objectAtIndex:6] != @"0"
+        && [_markers objectAtIndex:7] != @"0" && [_markers objectAtIndex:8] != @"0" && [_markers objectAtIndex:9] != @"0") return 3;
+    }    
+    return 0;
 }
 
 -(void) placeMarker:(int)position {
@@ -88,10 +137,8 @@
     
     if(curPlayer == @"1") {
         marker = [CCSprite spriteWithFile:@"x.png"];
-        curPlayer = @"2";
     } else {
         marker = [CCSprite spriteWithFile:@"o.png"];
-        curPlayer = @"1";
     }
     
     // Top row
@@ -109,8 +156,35 @@
         [_markers replaceObjectAtIndex:position withObject:curPlayer];
         marker.position = ccp(markX,markY);
         [self addChild:marker];
+        [_markersprites insertObject:marker atIndex:0];
         NSLog(@"Adding marker at position %d",position); 
     }
+    
+    int winner = [self checkWinner];
+    if(winner){
+        // We got a winner!
+        NSLog(@"We have a winner: %d",winner);
+        gameActive = false;
+        if(winner == 1){ 
+            [turnmsg setString:@"Player X Won!"]; 
+        }else if (winner == 3){
+            [turnmsg setString:@"It's a draw!"];      
+        }
+        else {
+            [turnmsg setString:@"Player O Won!"];   
+        }
+        return;
+    }
+    
+    if(curPlayer == @"1") { 
+        curPlayer = @"2";
+        [turnmsg setString:@"Player O"];
+    }
+    else {
+        curPlayer = @"1";
+         [turnmsg setString:@"Player X"];
+    }
+
 }
 
 - (void) addMarker:(CGPoint)location {
@@ -159,12 +233,20 @@
 
 
 -(void) ccTouchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-   
-    UITouch *touch = [touches anyObject];
-    CGPoint location = [touch locationInView:[touch view]];
-    location = [[CCDirector sharedDirector] convertToGL:location];
     
-    [self addMarker:location];
+    if(gameActive == true){   
+        UITouch *touch = [touches anyObject];
+        CGPoint location = [touch locationInView:[touch view]];
+        location = [[CCDirector sharedDirector] convertToGL:location];
+    
+        [self addMarker:location];
+    } else {
+        [self removeChild:startmsg cleanup:TRUE];
+
+        [turnmsg setString:@"Player X"];
+        gameActive = true;
+        [self resetMarkers];
+    }
 }
 
 
@@ -177,6 +259,9 @@
 	
     [_markers release];
     _markers = nil;
+    
+    [_markersprites release];
+    _markersprites = nil;
     
 	// don't forget to call "super dealloc"
 	[super dealloc];

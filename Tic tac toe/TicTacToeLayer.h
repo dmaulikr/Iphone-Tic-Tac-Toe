@@ -15,7 +15,12 @@
 @interface TicTacToeLayer : CCLayer
 {
     NSMutableArray *_markers;
+    NSMutableArray *_markersprites;
     NSString       *curPlayer;
+    Boolean        gameActive;
+    CCLabelTTF     *headermsg;
+    CCLabelTTF     *startmsg;
+    CCLabelTTF     *turnmsg;
 
 }
 
