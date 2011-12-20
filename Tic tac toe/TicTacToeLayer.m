@@ -104,11 +104,11 @@
         if([_markers objectAtIndex:6] == @"2" && [_markers objectAtIndex:8] == @"2" && [_markers objectAtIndex:9] == @"2") return 2;
         
         // Check for vertical rows
-        if([_markers objectAtIndex:1] == @"1" && [_markers objectAtIndex:4] == @"1" && [_markers objectAtIndex:6] == @"1") return 1;
+        if([_markers objectAtIndex:1] == @"1" && [_markers objectAtIndex:4] == @"1" && [_markers objectAtIndex:7] == @"1") return 1;
         if([_markers objectAtIndex:2] == @"1" && [_markers objectAtIndex:5] == @"1" && [_markers objectAtIndex:8] == @"1") return 1;
         if([_markers objectAtIndex:3] == @"1" && [_markers objectAtIndex:6] == @"1" && [_markers objectAtIndex:9] == @"1") return 1;
 
-        if([_markers objectAtIndex:1] == @"2" && [_markers objectAtIndex:4] == @"2" && [_markers objectAtIndex:6] == @"2") return 2;
+        if([_markers objectAtIndex:1] == @"2" && [_markers objectAtIndex:4] == @"2" && [_markers objectAtIndex:7] == @"2") return 2;
         if([_markers objectAtIndex:2] == @"2" && [_markers objectAtIndex:5] == @"2" && [_markers objectAtIndex:8] == @"2") return 2;
         if([_markers objectAtIndex:3] == @"2" && [_markers objectAtIndex:6] == @"2" && [_markers objectAtIndex:9] == @"2") return 2;
         
