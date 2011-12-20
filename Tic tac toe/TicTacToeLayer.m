@@ -77,12 +77,14 @@
 	return self;
 }
 
-
-
-- (void) addMarker:(CGPoint)location {
+-(void) placeMarker:(int)position {
+    int markY;
+    int markX;
+    int paddingX = 62;
+    int addX = 98;
+    
     CCSprite *marker;
     
-    NSLog(@"TouchedX:%f TouchedY:%f",location.x,location.y);   
     if(curPlayer == @"1") {
         marker = [CCSprite spriteWithFile:@"x.png"];
         curPlayer = @"2";
@@ -90,6 +92,30 @@
         marker = [CCSprite spriteWithFile:@"o.png"];
         curPlayer = @"1";
     }
+    
+    // Top row
+    if(position <= 3){
+        markY = 255;
+        markX = paddingX + ((position -1) * addX);
+    } else if (position >=4 && position <=6){
+        markY = 155;
+        markX = paddingX + ((position -4) * addX);
+    } else if (position >=7 && position <=9){
+        markY = 58;
+        markX = paddingX + ((position -7) * addX);
+    }
+    if([_markers objectAtIndex:position] == @"0"){
+        [_markers replaceObjectAtIndex:position withObject:curPlayer];
+        marker.position = ccp(markX,markY);
+        [self addChild:marker];
+        NSLog(@"Adding marker at position %d",position); 
+    }
+}
+
+- (void) addMarker:(CGPoint)location {
+    
+    NSLog(@"TouchedX:%f TouchedY:%f",location.x,location.y);   
+
     
     int i;
     for(i = 1; i <= 9; i++){
@@ -105,105 +131,31 @@
     // Top row 
     if(location.y < 306 && location.y > 213){
         
-        if(location.x > 15 && location.x < 108){
-            if([_markers objectAtIndex:1] == @"0"){
-                [_markers replaceObjectAtIndex:1 withObject:curPlayer];
-                marker.position = ccp(62,255);
-                [self addChild:marker];
-                NSLog(@"Adding marker at position 1"); 
-                return;
-            }
-        }
-
-        if(location.x > 110 && location.x < 203){
-             if([_markers objectAtIndex:2] == @"0"){
-                [_markers replaceObjectAtIndex:2 withObject:curPlayer];
-                marker.position = ccp(160,255);
-                [self addChild:marker];
-                  NSLog(@"Adding marker at position 2"); 
-                 return;
-            }
-        }  
-        if(location.x > 205 && location.x < 298){
-             if([_markers objectAtIndex:3] == @"0"){
-                [_markers replaceObjectAtIndex:3 withObject:curPlayer];
-                marker.position = ccp(258,255);
-                [self addChild:marker];
-                  NSLog(@"Adding marker at position 3"); 
-                 return;
-            }
-        } 
+        if(location.x > 15 && location.x < 108) [self placeMarker:1];
+        if(location.x > 110 && location.x < 203)[self placeMarker:2];
+        if(location.x > 205 && location.x < 298)[self placeMarker:3];
+        
     }
     // Middle row
     else if(location.y < 204 && location.y > 113){
         
-        if(location.x > 15 && location.x < 108){
-             if([_markers objectAtIndex:4] == @"0"){
-                [_markers replaceObjectAtIndex:4 withObject:curPlayer];
-                marker.position = ccp(62,158);
-                [self addChild:marker];
-                  NSLog(@"Adding marker at position 4"); 
-                 return;
-            }
-        }
-        if(location.x > 110 && location.x < 203){
-             if([_markers objectAtIndex:5] == @"0"){
-                [_markers replaceObjectAtIndex:5 withObject:curPlayer];
-                marker.position = ccp(160,158);
-                [self addChild:marker];
-                  NSLog(@"Adding marker at position 5"); 
-                 return;
-            }
-        }  
-        if(location.x > 205 && location.x < 298){
-             if([_markers objectAtIndex:6] == @"0"){
-                [_markers replaceObjectAtIndex:6 withObject:curPlayer];
-                marker.position = ccp(258,158);
-                [self addChild:marker];
-                  NSLog(@"Adding marker at position 6"); 
-                 return;
-            }
-        } 
+        if(location.x > 15 && location.x < 108)[self placeMarker:4];
+        if(location.x > 110 && location.x < 203)[self placeMarker:5];
+        if(location.x > 205 && location.x < 298)[self placeMarker:6];
     }
     // Bottom row
     else if(location.y < 108 && location.y > 16){
         
-        if(location.x > 15 && location.x < 108){
-             if([_markers objectAtIndex:7] == @"0"){
-                [_markers replaceObjectAtIndex:7 withObject:curPlayer];
-                marker.position = ccp(62,60);
-                [self addChild:marker];
-                  NSLog(@"Adding marker at position 7"); 
-                 return;
-            }
-        }
-        if(location.x > 110 && location.x < 203){
-             if([_markers objectAtIndex:8] == @"0"){
-                [_markers replaceObjectAtIndex:8 withObject:curPlayer];
-                marker.position = ccp(160,60);
-                [self addChild:marker];
-                  NSLog(@"Adding marker at position 8"); 
-                 return;
-            }
-        }  
-        if(location.x > 205 && location.x < 298){
-             if([_markers objectAtIndex:9] == @"0"){
-                [_markers replaceObjectAtIndex:9 withObject:curPlayer];
-                marker.position = ccp(258,60);
-                [self addChild:marker];
-                  NSLog(@"Adding marker at position 9"); 
-                 return;
-            }
-        } 
+        if(location.x > 15 && location.x < 108)[self placeMarker:7];
+        if(location.x > 110 && location.x < 203)[self placeMarker:8];
+        if(location.x > 205 && location.x < 298)[self placeMarker:9];
     }
     else {
         return;
     }
-
-    
-
-    
 }
+
+
 
 -(void) ccTouchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
    
