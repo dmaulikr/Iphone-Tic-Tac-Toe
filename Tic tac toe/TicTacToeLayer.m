@@ -152,13 +152,15 @@
         markY = 58;
         markX = paddingX + ((position -7) * addX);
     }
-    if([_markers objectAtIndex:position] == @"0"){
-        [_markers replaceObjectAtIndex:position withObject:curPlayer];
-        marker.position = ccp(markX,markY);
-        [self addChild:marker];
-        [_markersprites insertObject:marker atIndex:0];
-        NSLog(@"Adding marker at position %d",position); 
-    }
+    
+    if([_markers objectAtIndex:position] != @"0")
+        return;
+    
+    [_markers replaceObjectAtIndex:position withObject:curPlayer];
+    marker.position = ccp(markX,markY);
+    [self addChild:marker];
+    [_markersprites insertObject:marker atIndex:0];
+    NSLog(@"Adding marker at position %d",position); 
     
     int winner = [self checkWinner];
     if(winner){
